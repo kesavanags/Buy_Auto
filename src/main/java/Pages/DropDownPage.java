@@ -1,6 +1,7 @@
 package Pages;
 
 import Common.AgilysysCommon;
+import com.relevantcodes.extentreports.ExtentTest;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
 import java.awt.*;
@@ -8,8 +9,9 @@ import java.awt.event.KeyEvent;
 
 public class DropDownPage extends AgilysysCommon {
 
-    DropDownPage(RemoteWebDriver driver){
+    DropDownPage(RemoteWebDriver driver,ExtentTest test){
         this.driver = driver;
+        this.test=test;
     }
 
     public DropDownPage clickElement(){
@@ -27,6 +29,6 @@ public class DropDownPage extends AgilysysCommon {
 
     public MainPage clickNext(){
         clickByXpath("//*[text()='Next']");
-        return new MainPage(driver);
+        return new MainPage(driver,test);
     }
 }

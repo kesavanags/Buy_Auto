@@ -21,13 +21,12 @@ public class BuySample extends AgilysysCommon{
 
     @BeforeClass
     public void beforeClass(){
-
+        startResult();
     }
 
     @BeforeMethod
     public void beforeMethod()
     {
-        startResult();
         startTestCase("Login","login successful");
         invokeApp("chrome");
     }
@@ -35,7 +34,7 @@ public class BuySample extends AgilysysCommon{
     @Test()
     public void TestSample() throws InterruptedException {
 
-        new LoginPage(driver)
+        new LoginPage(driver,test)
                 .enterUserName()
                 .enterPassword()
                 .clickNext()

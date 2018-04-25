@@ -141,16 +141,16 @@ public class AgilysysCommon extends Report implements InterfaceCommon {
         try {
             //driver.findElement(By.name(nameValue)).clear();
             driver.findElement(By.name(nameValue)).sendKeys(data);
-            //reportStep("The data: " + data + " entered successfully in field :"
-                  //  + nameValue, "PASS");
+            reportStep("The data: " + data + " entered successfully in field :"
+                    + nameValue, "PASS");
 
         } catch (NoSuchElementException e) {
-            //reportStep("The data: " + data
-                   //         + " could not be entered in the field :" + nameValue,
-                   // "FAIL");
+            reportStep("The data: " + data
+                            + " could not be entered in the field :" + nameValue,
+                    "FAIL");
         } catch (Exception e) {
-            //reportStep("Unknown exception occured while entering " + data
-                  //  + " in the field :" + nameValue, "FAIL");
+            reportStep("Unknown exception occured while entering " + data
+                    + " in the field :" + nameValue, "FAIL");
         }
 
     }
@@ -396,10 +396,10 @@ public class AgilysysCommon extends Report implements InterfaceCommon {
     public void clickByXpath(String xpathVal) {
         try {
             driver.findElement(By.xpath(xpathVal)).click();
-            // //reportStep("The element : "+xpathVal+" is clicked.", "PASS");
+             reportStep("The element : "+xpathVal+" is clicked.", "PASS");
         } catch (Exception e) {
-            //reportStep("The element with xpath: " + xpathVal
-             //       + " could not be clicked.", "FAIL");
+            reportStep("The element with xpath: " + xpathVal
+                    + " could not be clicked.", "FAIL");
         }
     }
 
@@ -441,12 +441,12 @@ public class AgilysysCommon extends Report implements InterfaceCommon {
                     .moveToElement(driver.findElement(By.xpath(xpathVal)))
                     .click()
                     .build().perform();
-//            reportStep(
-//                   "The mouse over by xpath : " + xpathVal + " is performed.",
-//                  "PASS");
+            reportStep(
+                   "The mouse over by xpath : " + xpathVal + " is performed.",
+                  "PASS");
         } catch (Exception e) {
-            //reportStep("The mouse over by xpath : " + xpathVal
-            //       + " could not be performed.", "FAIL");
+            reportStep("The mouse over by xpath : " + xpathVal
+                   + " could not be performed.", "FAIL");
         }
     }
 
@@ -459,12 +459,12 @@ public class AgilysysCommon extends Report implements InterfaceCommon {
             new Actions(driver)
                     .sendKeys(text)
                     .build().perform();
-            //reportStep(
-            //       "The mouse over by xpath : " + xpathVal + " is performed.",
-            //      "PASS");
+            reportStep(
+                   "The text "+text+" is keyed in the specified text area",
+                  "PASS");
         } catch (Exception e) {
-            //reportStep("The mouse over by xpath : " + xpathVal
-            //       + " could not be performed.", "FAIL");
+            reportStep("The text "+text+"could not be keyed in the specified text field",
+                     "FAIL");
         }
     }
 
