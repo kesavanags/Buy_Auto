@@ -5,8 +5,8 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 
 public class LoginPage extends AgilysysCommon {
 
-    String USERNAME="buy_test@tenantforig4410";
-    String PASSWORD="Pa$$word5";
+    String USERNAME="buy_test@0304";
+    String PASSWORD="Pa$$word9";
 
     public LoginPage(RemoteWebDriver driver){
         this.driver = driver;
@@ -16,7 +16,8 @@ public class LoginPage extends AgilysysCommon {
         enterByName("username",USERNAME);
         return this;
     }
-    public LoginPage enterPassword(){
+    public LoginPage
+    enterPassword(){
         enterByName("password",PASSWORD);
         return this;
     }

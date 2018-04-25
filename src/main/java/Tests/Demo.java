@@ -13,8 +13,7 @@ import org.testng.annotations.Test;
 
 import java.util.concurrent.TimeUnit;
 
-//comment the above line and uncomment below line to use Chrome
-//import org.openqa.selenium.chrome.ChromeDriver;
+
 @Test
 public class Demo {
 

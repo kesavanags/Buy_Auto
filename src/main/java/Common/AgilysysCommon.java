@@ -1,5 +1,8 @@
 package Common;
 
+//import Common.Report.Report;
+import Common.Report.Report;
+import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -12,11 +15,14 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-public class AgilysysCommon  implements InterfaceCommon {
+public class AgilysysCommon extends Report implements InterfaceCommon {
     public AgilysysCommon(RemoteWebDriver driver) {
         this.driver = driver;
     }
@@ -26,18 +32,7 @@ public class AgilysysCommon  implements InterfaceCommon {
     public String sUrl, primaryWindowHandle, sHubUrl, sHubPort;
 
     public AgilysysCommon() {
-//        Properties prop = new Properties();
-//        try {
-//            prop.load(new FileInputStream(
-//                    new File("./src/main/resources/config.properties")));
-//            sHubUrl = prop.getProperty("HUB");
-//            sHubPort = prop.getProperty("PORT");
             sUrl = "http://buy-test-buy-01.bellevue.agilysys.com:8080/login";
-//        } catch (FileNotFoundException e) {
-//            e.printStackTrace();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
     }
 
     public void loadObjects() {
@@ -95,13 +90,13 @@ public class AgilysysCommon  implements InterfaceCommon {
             driver.get(sUrl);
 
             primaryWindowHandle = driver.getWindowHandle();
-//            //reportStep("The browser:" + browser + " launched successfully",
-//                    "PASS");
+            reportStep("The browser:" + browser + " launched successfully",
+            "PASS");
 
         } catch (Exception e) {
             e.printStackTrace();
-//            //reportStep("The browser:" + browser + " could not be launched",
-//                    "FAIL");
+            reportStep("The browser:" + browser + " could not be launched",
+                    "FAIL");
         }
     }
 
@@ -626,22 +621,22 @@ public class AgilysysCommon  implements InterfaceCommon {
 
     }
 
-//    public long takeSnap() {
-//
-//        long number = (long) Math.floor(Math.random() * 900000000L) + 10000000L;
-//        DateFormat form = new SimpleDateFormat("YYYY/MMMdd");
-//        Date d = new Date();
-//        String date = form.format(d).toString();
-//
-//        try {
-//            FileUtils.copyFile(driver.getScreenshotAs(OutputType.FILE),
-//                    new File("./reports/images/" + date + "/" + number
-//                            + ".jpg"));
-//        } catch (WebDriverException e) {
-//            //reportStep("The browser has been closed.", "FAIL");
-//        } catch (IOException e) {
-//            //reportStep("The snapshot could not be taken", "WARN");
-//        }
-//        return number;
-//    }
+    public long takeSnap() {
+
+        long number = (long) Math.floor(Math.random() * 900000000L) + 10000000L;
+        DateFormat form = new SimpleDateFormat("YYYY/MMMdd");
+        Date d = new Date();
+        String date = form.format(d).toString();
+
+        try {
+            FileUtils.copyFile(driver.getScreenshotAs(OutputType.FILE),
+                    new File("./reports/images/" + date + "/" + number
+                            + ".jpg"));
+        } catch (WebDriverException e) {
+            reportStep("The browser has been closed.", "FAIL");
+        } catch (IOException e) {
+            reportStep("The snapshot could not be taken", "WARN");
+        }
+        return number;
+    }
 }
