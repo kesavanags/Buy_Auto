@@ -1,6 +1,7 @@
 package Common;
 
 //import Common.Report.Report;
+
 import Common.Report.Report;
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.*;
@@ -29,45 +30,17 @@ public class AgilysysCommon extends Report implements InterfaceCommon {
 
     public RemoteWebDriver driver;
     protected static Properties prop;
-    public String sUrl, primaryWindowHandle, sHubUrl, sHubPort;
+    public String sUrl, primaryWindowHandle;
 
     public AgilysysCommon() {
-            sUrl = "http://buy-test-buy-01.bellevue.agilysys.com:8080/login";
+        sUrl = "http://buy-test-buy-01.bellevue.agilysys.com:8080/login";
     }
 
-    public void loadObjects() {
-        prop = new Properties();
-        try {
-            prop.load(new FileInputStream(
-                    new File("./src/main/resources/object.properties")));
-        } catch (FileNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-
-    }
-
-    public void unloadObjects() {
-        prop = null;
-    }
-
-    /**
-     * This method will launch the browser in local machine and maximise the
-     * browser and set the wait for 30 seconds and load the url
-     //* @param url- The url with http or https
-     */
-    public void invokeApp(String browser) {
+    public void invokeTestApp(String browser) {
         invokeApp(browser, false);
     }
 
-    /**
-     * This method will launch the browser in grid node (if remote) and maximise
-     * the browser and set the wait for 30 seconds and load the url
-     //* @param url- The url with http or https
-     */
+
     public void invokeApp(String browser, boolean bRemote) {
         try {
 
@@ -90,315 +63,237 @@ public class AgilysysCommon extends Report implements InterfaceCommon {
             driver.get(sUrl);
 
             primaryWindowHandle = driver.getWindowHandle();
-            reportStep("The browser:" + browser + " launched successfully",
-            "PASS");
+            reportTestStep("The browser:" + browser + " launched successfully",
+                    "PASS");
 
         } catch (Exception e) {
             e.printStackTrace();
-            reportStep("The browser:" + browser + " could not be launched",
+            reportTestStep("The browser:" + browser + " could not be launched",
                     "FAIL");
         }
     }
 
-    /**
-     * This method will enter the value to the text field using id attribute to
-     * locate
-     * @param idValue- id of the webelement
-     * @param data- The data to be sent to the webelement
-     * @throws IOException
-    // * @throws COSVisitorException
-     */
-    //
+
     public void enterById(String idValue, String data) {
         try {
             driver.findElement(By.id(idValue)).clear();
             driver.findElement(By.id(idValue)).sendKeys(data);
-            //reportStep("The data: " + data + " entered successfully in field :"
-                   // + idValue, "PASS");
+            reportTestStep("The data: " + data + " entered successfully in field :"
+                    + idValue, "PASS");
         } catch (NoSuchElementException e) {
-            //reportStep("The data: " + data
-                 //   + " could not be entered in the field :" + idValue, "FAIL");
+            reportTestStep("The data: " + data
+                    + " could not be entered in the field :" + idValue, "FAIL");
         } catch (WebDriverException e) {
-            //reportStep("Unknown exception occured while entering " + data
-                //    + " in the field :" + idValue, "FAIL");
+            reportTestStep("Unknown exception occured while entering " + data
+                    + " in the field :" + idValue, "FAIL");
         } catch (Exception e) {
-            //reportStep("Unknown exception occured while entering " + data
-              //      + " in the field :" + idValue, "FAIL");
+            reportTestStep("Unknown exception occured while entering " + data
+                    + " in the field :" + idValue, "FAIL");
         }
     }
 
-    /**
-     * This method will enter the value to the text field using name attribute
-     * to locate
-     * @param nameValue- name of the webelement
-     * @param data- The data to be sent to the webelement
-     * @throws IOException
-     //* @throws COSVisitorException
-     */
-
-    // Enter the values using Name Locator
     public void enterByName(String nameValue, String data) {
         try {
-            //driver.findElement(By.name(nameValue)).clear();
+            driver.findElement(By.name(nameValue)).clear();
             driver.findElement(By.name(nameValue)).sendKeys(data);
-            reportStep("The data: " + data + " entered successfully in field :"
+            reportTestStep("The data: " + data + " entered successfully in field :"
                     + nameValue, "PASS");
 
         } catch (NoSuchElementException e) {
-            reportStep("The data: " + data
+            reportTestStep("The data: " + data
                             + " could not be entered in the field :" + nameValue,
                     "FAIL");
         } catch (Exception e) {
-            reportStep("Unknown exception occured while entering " + data
+            reportTestStep("Unknown exception occured while entering " + data
                     + " in the field :" + nameValue, "FAIL");
         }
 
     }
 
-    /**
-     * This method will enter the value to the text field using name attribute
-     * to locate
-     * @param xpathValue- xpathValue of the webelement
-     * @param data- The data to be sent to the webelement
-     * @throws IOException
-     //* @throws COSVisitorException
-     */
     public void enterByXpath(String xpathValue, String data) {
         try {
             driver.findElement(By.xpath(xpathValue)).clear();
             driver.findElement(By.xpath(xpathValue)).sendKeys(data);
-            //reportStep("The data: " + data + " entered successfully in field :"
-             //       + xpathValue, "PASS");
+            reportTestStep("The data: " + data + " entered successfully in field :"
+                    + xpathValue, "PASS");
 
         } catch (NoSuchElementException e) {
-            //reportStep("The data: " + data
-            //                + " could not be entered in the field :" + xpathValue,
-            //        "FAIL");
+            reportTestStep("The data: " + data
+                            + " could not be entered in the field :" + xpathValue,
+                    "FAIL");
         } catch (Exception e) {
-            //reportStep("Unknown exception occured while entering " + data
-             //       + " in the field :" + xpathValue, "FAIL");
+            reportTestStep("Unknown exception occured while entering " + data
+                    + " in the field :" + xpathValue, "FAIL");
         }
 
     }
 
-    /**
-     * This method will verify the title of the browser
-     * @param title- The expected title of the browser
-     */
     public boolean verifyTitle(String title) {
         boolean bReturn = false;
         try {
             if (driver.getTitle().equalsIgnoreCase(title)) {
-                //reportStep("The title of the page matches with the value :"
-             //           + title, "PASS");
+                reportTestStep("The title of the page matches with the value :"
+                        + title, "PASS");
                 bReturn = true;
-            }
-            else {
-                //reportStep(
-//                        "The title of the page:" + driver.getTitle()
-//                                + " did not match with the value :" + title,
-//                        "SUCCESS");
+            } else {
+                reportTestStep(
+                        "The title of the page:" + driver.getTitle()
+                                + " did not match with the value :" + title,
+                        "SUCCESS");
 
             }
         } catch (Exception e) {
-            //reportStep("Unknown exception occured while verifying the title",
-              //      "FAIL");
+            reportTestStep("Unknown exception occured while verifying the title",
+                    "FAIL");
         }
         return bReturn;
     }
 
-    /**
-     * This method will verify the given text matches in the element text
-     * @param xpath- The locator of the object in xpath
-     * @param text- The text to be verified
-     */
     public void verifyTextByXpath(String xpath, String text) {
         try {
             String sText = driver.findElementByXPath(xpath).getText();
             if (sText.equalsIgnoreCase(text)) {
-                //reportStep("The text: " + sText + " matches with the value :"
-             //           + text, "PASS");
+                reportTestStep("The text: " + sText + " matches with the value :"
+                        + text, "PASS");
             } else {
-                //reportStep("The text: " + sText
-              //          + " did not match with the value :" + text, "FAIL");
+                reportTestStep("The text: " + sText
+                        + " did not match with the value :" + text, "FAIL");
             }
         } catch (Exception e) {
-            //reportStep("Unknown exception occured while verifying the title",
-             //       "FAIL");
+            reportTestStep("Unknown exception occured while verifying the title",
+                    "FAIL");
         }
     }
 
-    /**
-     * This method will verify the given text is available in the element text
-     * @param xpath- The locator of the object in xpath
-     * @param text- The text to be verified
-     */
     public void verifyTextContainsByXpath(String xpath, String text) {
         try {
             String sText = driver.findElementByXPath(xpath).getText();
             if (sText.contains(text)) {
-                //reportStep(
-             //           "The text: " + sText + " contains the value :" + text,
-              //          "PASS");
+                reportTestStep(
+                        "The text: " + sText + " contains the value :" + text,
+                        "PASS");
             } else {
-                //reportStep("The text: " + sText + " did not contain the value :"
-               //         + text, "FAIL");
+                reportTestStep("The text: " + sText + " did not contain the value :"
+                        + text, "FAIL");
             }
         } catch (Exception e) {
-            //reportStep("Unknown exception occured while verifying the title",
-               //     "FAIL");
+            reportTestStep("Unknown exception occured while verifying the title",
+                    "FAIL");
         }
     }
 
-    /**
-     * This method will verify the given text is available in the element text
-     * @param id- The locator of the object in id
-     * @param text- The text to be verified
-     */
     public void verifyTextById(String id, String text) {
         try {
             String sText = driver.findElementById(id).getText();
             if (sText.equalsIgnoreCase(text)) {
-//                //reportStep("The text: " + sText + " matches with the value :"
-//                        + text, "PASS");
+                reportTestStep("The text: " + sText + " matches with the value :"
+                        + text, "PASS");
             } else {
-                //reportStep("The text: " + sText
-           //             + " did not match with the value :" + text, "FAIL");
+                reportTestStep("The text: " + sText
+                        + " did not match with the value :" + text, "FAIL");
             }
         } catch (Exception e) {
-            //reportStep("Unknown exception occured while verifying the title",
-             //       "FAIL");
+            reportTestStep("Unknown exception occured while verifying the title",
+                    "FAIL");
         }
     }
 
-    /**
-     * This method will verify the given text is available in the element text
-     * @param id-The locator of the object in id
-     * @param text-The text to be verified
-     *
-     */
     public void verifyTextContainsById(String id, String text) {
         try {
             String sText = driver.findElementById(id).getText();
             if (sText.contains(text)) {
-                //reportStep(
-               //         "The text: " + sText + " contains the value :" + text,
-               //         "PASS");
+                reportTestStep(
+                        "The text: " + sText + " contains the value :" + text,
+                        "PASS");
             } else {
-                //reportStep("The text: " + sText + " did not contain the value :"
-               //         + text, "FAIL");
+                reportTestStep("The text: " + sText + " did not contain the value :"
+                        + text, "FAIL");
             }
         } catch (Exception e) {
-            //reportStep("Unknown exception occured while verifying the title",
-               //     "FAIL");
+            reportTestStep("Unknown exception occured while verifying the title",
+                    "FAIL");
         }
     }
 
-    /**
-     * This method will close all the browsers
-     *
-     */
     public void quitBrowser() {
         try {
             driver.quit();
         } catch (Exception e) {
-            //reportStep(
-              //      "The browser:" + driver.getCapabilities().getBrowserName()
-              //              + " could not be closed.",
-              //      "FAIL");
+            reportTestStep(
+                    "The browser:" + driver.getCapabilities().getBrowserName()
+                            + " could not be closed.",
+                    "FAIL");
         }
 
     }
 
-    /**
-     * This method will click the element using id as locator
-     * @param id-The id (locator) of the element to be clicked
-     */
     public void clickById(String id) {
         try {
 
             driver.findElement(By.id(id)).click();
-            //reportStep("The element with id: " + id + " is clicked.", "PASS");
+            reportTestStep("The element with id: " + id + " is clicked.", "PASS");
 
         } catch (NoSuchElementException e) {
-            //reportStep("The element with id: " + id + " could not be clicked.",
-              //      "FAIL");
-        }
-
-        catch (Exception e) {
-            //reportStep("The element with id: " + id + " could not be clicked.",
-              //      "FAIL");
+            reportTestStep("The element with id: " + id + " could not be clicked.",
+                    "FAIL");
+        } catch (Exception e) {
+            reportTestStep("The element with id: " + id + " could not be clicked.",
+                    "FAIL");
         }
     }
 
-    /**
-     * This method will click the element using id as locator
-     //* @param id-The id (locator) of the element to be clicked
-     */
     public void clickByClassName(String classVal) {
         try {
             driver.findElement(By.className(classVal)).click();
-            //reportStep(
-             //       "The element with class Name: " + classVal + " is clicked.",
-             //       "PASS");
+            reportTestStep(
+                    "The element with class Name: " + classVal + " is clicked.",
+                    "PASS");
         } catch (Exception e) {
-            //reportStep("The element with class Name: " + classVal
-                //    + " could not be clicked.", "FAIL");
+            reportTestStep("The element with class Name: " + classVal
+                    + " could not be clicked.", "FAIL");
         }
     }
 
-    /**
-     * This method will click the element using name as locator
-     * @param name-The name (locator) of the element to be clicked
-     */
     public void clickByName(String name) {
         try {
             driver.findElement(By.name(name)).click();
-            //reportStep("The element with name: " + name + " is clicked.",
-             //       "PASS");
+            reportTestStep("The element with name: " + name + " is clicked.",
+                    "PASS");
         } catch (Exception e) {
-            //reportStep(
-             //       "The element with name: " + name + " could not be clicked.",
-             //       "FAIL");
+            reportTestStep(
+                    "The element with name: " + name + " could not be clicked.",
+                    "FAIL");
         }
     }
 
-    /**
-     * This method will click the element using link name as locator
-     * @param name-The link name (locator) of the element to be clicked
-     */
     public void clickByLink(String name) {
         try {
             driver.findElement(By.linkText(name)).click();
-            // //reportStep("The element with link name: "+name+" is clicked.",
-            // "PASS");
+            reportTestStep("The element with link name: " + name + " is clicked.",
+                    "PASS");
         } catch (Exception e) {
-            //reportStep("The element with link name: " + name
-              //      + " could not be clicked.", "FAIL");
+            reportTestStep("The element with link name: " + name
+                    + " could not be clicked.", "FAIL");
         }
     }
 
     public void clickByLinkNoSnap(String name) {
         try {
             driver.findElement(By.linkText(name)).click();
-            // //reportStep("The element with link name: "+name+" is clicked.",
-            // "PASS");
+            reportTestStep("The element with link name: " + name + " is clicked.",
+                    "PASS");
         } catch (Exception e) {
-            //reportStep("The element with link name: " + name
-             //       + " could not be clicked.", "FAIL");
+            reportTestStep("The element with link name: " + name
+                    + " could not be clicked.", "FAIL");
         }
     }
 
-    /**
-     * This method will click the element using xpath as locator
-     * @param xpathVal-The xpath (locator) of the element to be clicked
-     */
     public void clickByXpath(String xpathVal) {
         try {
             driver.findElement(By.xpath(xpathVal)).click();
-             reportStep("The element : "+xpathVal+" is clicked.", "PASS");
+            reportTestStep("The element : " + xpathVal + " is clicked.", "PASS");
         } catch (Exception e) {
-            reportStep("The element with xpath: " + xpathVal
+            reportTestStep("The element with xpath: " + xpathVal
                     + " could not be clicked.", "FAIL");
         }
     }
@@ -406,159 +301,128 @@ public class AgilysysCommon extends Report implements InterfaceCommon {
     public void clickByXpathNoSnap(String xpathVal) {
         try {
             driver.findElement(By.xpath(xpathVal)).click();
-            // //reportStep("The element : "+xpathVal+" is clicked.", "PASS");
+            reportTestStep("The element : " + xpathVal + " is clicked.", "PASS");
         } catch (Exception e) {
-            //reportStep("The element with xpath: " + xpathVal
-              //      + " could not be clicked.", "FAIL");
+            reportTestStep("The element with xpath: " + xpathVal
+                    + " could not be clicked.", "FAIL");
         }
     }
 
-    /**
-     * This method will mouse over on the element using xpath as locator
-     * @param xpathVal-The xpath (locator) of the element to be moused over
-     */
     public void mouseOverByXpath(String xpathVal) {
         try {
             new Actions(driver)
                     .moveToElement(driver.findElement(By.xpath(xpathVal)))
                     .build().perform();
-            //reportStep(
-             //       "The mouse over by xpath : " + xpathVal + " is performed.",
-              //      "PASS");
+            reportTestStep(
+                    "The mouse over by xpath : " + xpathVal + " is performed.",
+                    "PASS");
         } catch (Exception e) {
-            //reportStep("The mouse over by xpath : " + xpathVal
-             //       + " could not be performed.", "FAIL");
+            reportTestStep("The mouse over by xpath : " + xpathVal
+                    + " could not be performed.", "FAIL");
         }
     }
 
-    /**
-     * This method will mouse over on the element using xpath as locator
-     * @param xpathVal-The xpath (locator) of the element to be clicked
-     */
     public void mouseClickByXpath(String xpathVal) {
         try {
             new Actions(driver)
                     .moveToElement(driver.findElement(By.xpath(xpathVal)))
                     .click()
                     .build().perform();
-            reportStep(
-                   "The mouse over by xpath : " + xpathVal + " is performed.",
-                  "PASS");
+            reportTestStep(
+                    "The mouse over by xpath : " + xpathVal + " is performed.",
+                    "PASS");
         } catch (Exception e) {
-            reportStep("The mouse over by xpath : " + xpathVal
-                   + " could not be performed.", "FAIL");
+            reportTestStep("The mouse over by xpath : " + xpathVal
+                    + " could not be performed.", "FAIL");
         }
     }
 
-    /**
-     * This method will mouse over on the element using xpath as locator
-     * @param text-The text to be entered
-     */
     public void enterTextWithActions(String text) {
         try {
             new Actions(driver)
                     .sendKeys(text)
                     .build().perform();
-            reportStep(
-                   "The text "+text+" is keyed in the specified text area",
-                  "PASS");
+            reportTestStep(
+                    "The text " + text + " is keyed in the specified text area",
+                    "PASS");
         } catch (Exception e) {
-            reportStep("The text "+text+"could not be keyed in the specified text field",
-                     "FAIL");
+            reportTestStep("The text " + text + "could not be keyed in the specified text field",
+                    "FAIL");
         }
     }
 
-    /**
-     * This method will mouse over on the element using xpath as locator
-     * @param text-The text to be entered
-     */
-
-    /**
-     * This method will mouse over on the element using link name as locator
-     //* @param xpathVal-The link name (locator) of the element to be moused over
-     */
     public void mouseOverByLinkText(String linkName) {
         try {
             new Actions(driver)
                     .moveToElement(driver.findElement(By.linkText(linkName)))
                     .build().perform();
-            //reportStep(
-             //       "The mouse over by link : " + linkName + " is performed.",
-             //       "PASS");
+            reportTestStep(
+                    "The mouse over by link : " + linkName + " is performed.",
+                    "PASS");
         } catch (Exception e) {
-            //reportStep("The mouse over by link : " + linkName
-              //      + " could not be performed.", "FAIL");
+            reportTestStep("The mouse over by link : " + linkName
+                    + " could not be performed.", "FAIL");
         }
     }
 
-    /**
-     * This method will return the text of the element using xpath as locator
-     * @param xpathVal-The xpath (locator) of the element
-     */
     public String getTextByXpath(String xpathVal) {
         String bReturn = "";
         try {
             return driver.findElement(By.xpath(xpathVal)).getText();
         } catch (Exception e) {
-            //reportStep("The element with xpath: " + xpathVal
-             //       + " could not be found.", "FAIL");
+            reportTestStep("The element with xpath: " + xpathVal
+                    + " could not be found.", "FAIL");
         }
         return bReturn;
     }
 
-    /**
-     * This method will return the text of the element using id as locator
-     //* @param xpathVal-The id (locator) of the element
-     */
     public String getTextById(String idVal) {
         String bReturn = "";
         try {
             return driver.findElementById(idVal).getText();
         } catch (Exception e) {
-            //reportStep("The element with id: " + idVal + " could not be found.",
-           //         "FAIL");
+            reportTestStep("The element with id: " + idVal + " could not be found.",
+                    "FAIL");
         }
         return bReturn;
     }
 
-    /**
-     * This method will select the drop down value using id as locator
-     * @param id-The id (locator) of the drop down element
-     * @param value-The value to be selected (visibletext) from the dropdown
-     */
     public void selectVisibileTextById(String id, String value) {
         try {
             new Select(driver.findElement(By.id(id)))
-                    .selectByVisibleText(value);;
-            //reportStep("The element with id: " + id
-            //        + " is selected with value :" + value, "PASS");
+                    .selectByVisibleText(value);
+            ;
+            reportTestStep("The element with id: " + id
+                    + " is selected with value :" + value, "PASS");
         } catch (Exception e) {
-            //reportStep("The value: " + value + " could not be selected.",
-             //       "FAIL");
+            reportTestStep("The value: " + value + " could not be selected.",
+                    "FAIL");
         }
     }
 
     public void selectVisibileTextByXPath(String xpath, String value) {
         try {
             new Select(driver.findElement(By.xpath(xpath)))
-                    .selectByVisibleText(value);;
-            //reportStep("The element with xpath: " + xpath
-             //       + " is selected with value :" + value, "PASS");
+                    .selectByVisibleText(value);
+            ;
+            reportTestStep("The element with xpath: " + xpath
+                    + " is selected with value :" + value, "PASS");
         } catch (Exception e) {
-            //reportStep("The value: " + value + " could not be selected.",
-               //     "FAIL");
+            reportTestStep("The value: " + value + " could not be selected.",
+                    "FAIL");
         }
     }
 
     public void selectIndexById(String id, String value) {
         try {
             new Select(driver.findElement(By.id(id)))
-                    .selectByIndex(Integer.parseInt(value));;
-            //reportStep("The element with id: " + id
-            //        + " is selected with index :" + value, "PASS");
+                    .selectByIndex(Integer.parseInt(value));
+            ;
+            reportTestStep("The element with id: " + id
+                    + " is selected with index :" + value, "PASS");
         } catch (Exception e) {
-            //reportStep("The index: " + value + " could not be selected.",
-            //        "FAIL");
+            reportTestStep("The index: " + value + " could not be selected.",
+                    "FAIL");
         }
     }
 
@@ -570,8 +434,8 @@ public class AgilysysCommon extends Report implements InterfaceCommon {
                 break;
             }
         } catch (Exception e) {
-            //reportStep("The window could not be switched to the first window.",
-            //        "FAIL");
+            reportTestStep("The window could not be switched to the first window.",
+                    "FAIL");
         }
     }
 
@@ -582,8 +446,8 @@ public class AgilysysCommon extends Report implements InterfaceCommon {
                 driver.switchTo().window(wHandle);
             }
         } catch (Exception e) {
-            //reportStep("The window could not be switched to the last window.",
-            //        "FAIL");
+            reportTestStep("The window could not be switched to the last window.",
+                    "FAIL");
         }
     }
 
@@ -591,9 +455,9 @@ public class AgilysysCommon extends Report implements InterfaceCommon {
         try {
             driver.switchTo().alert().accept();
         } catch (NoAlertPresentException e) {
-            //reportStep("The alert could not be found.", "FAIL");
+            reportTestStep("The alert could not be found.", "FAIL");
         } catch (Exception e) {
-            //reportStep("The alert could not be accepted.", "FAIL");
+            reportTestStep("The alert could not be accepted.", "FAIL");
         }
     }
 
@@ -602,9 +466,9 @@ public class AgilysysCommon extends Report implements InterfaceCommon {
         try {
             driver.switchTo().alert().getText();
         } catch (NoAlertPresentException e) {
-            //reportStep("The alert could not be found.", "FAIL");
+            reportTestStep("The alert could not be found.", "FAIL");
         } catch (Exception e) {
-            //reportStep("The alert could not be accepted.", "FAIL");
+            reportTestStep("The alert could not be accepted.", "FAIL");
         }
         return text;
 
@@ -614,14 +478,14 @@ public class AgilysysCommon extends Report implements InterfaceCommon {
         try {
             driver.switchTo().alert().dismiss();
         } catch (NoAlertPresentException e) {
-            //reportStep("The alert could not be found.", "FAIL");
+            reportTestStep("The alert could not be found.", "FAIL");
         } catch (Exception e) {
-            //reportStep("The alert could not be accepted.", "FAIL");
+            reportTestStep("The alert could not be accepted.", "FAIL");
         }
 
     }
 
-    public long takeSnap() {
+    public long takeASnapshot() {
 
         long number = (long) Math.floor(Math.random() * 900000000L) + 10000000L;
         DateFormat form = new SimpleDateFormat("YYYY/MMMdd");
@@ -633,9 +497,9 @@ public class AgilysysCommon extends Report implements InterfaceCommon {
                     new File("./reports/images/" + date + "/" + number
                             + ".jpg"));
         } catch (WebDriverException e) {
-            reportStep("The browser has been closed.", "FAIL");
+            reportTestStep("The browser has been closed.", "FAIL");
         } catch (IOException e) {
-            reportStep("The snapshot could not be taken", "WARN");
+            reportTestStep("The snapshot could not be taken", "WARN");
         }
         return number;
     }

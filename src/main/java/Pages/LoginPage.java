@@ -6,26 +6,27 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 
 public class LoginPage extends AgilysysCommon {
 
-    String USERNAME="buy_test@0304";
-    String PASSWORD="Pa$$word9";
+    String USERNAME = "buy_test@0304";
+    String PASSWORD = "Pa$$word9";
 
-    public LoginPage(RemoteWebDriver driver,ExtentTest test){
+    public LoginPage(RemoteWebDriver driver, ExtentTest test) {
         this.driver = driver;
-        this.test=test;
+        this.test = test;
     }
 
-    public LoginPage enterUserName(){
-        enterByName("username",USERNAME);
+    public LoginPage enterUserName() {
+        enterByName("username", USERNAME);
         return this;
     }
+
     public LoginPage
-    enterPassword(){
-        enterByName("password",PASSWORD);
+    enterPassword() {
+        enterByName("password", PASSWORD);
         return this;
     }
 
-    public DropDownPage clickNext(){
+    public DropDownPage clickNext() {
         clickByXpath("//*[text()='Next']");
-        return new DropDownPage(driver,test);
+        return new DropDownPage(driver, test);
     }
 }

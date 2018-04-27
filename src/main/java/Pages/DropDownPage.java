@@ -9,12 +9,12 @@ import java.awt.event.KeyEvent;
 
 public class DropDownPage extends AgilysysCommon {
 
-    DropDownPage(RemoteWebDriver driver,ExtentTest test){
+    DropDownPage(RemoteWebDriver driver, ExtentTest test) {
         this.driver = driver;
-        this.test=test;
+        this.test = test;
     }
 
-    public DropDownPage clickElement(){
+    public DropDownPage clickElement() {
         mouseClickByXpath("*//div[text()='Select store']");
         enterTextWithActions("rgb dev automation store a_1-1");
 
@@ -27,8 +27,8 @@ public class DropDownPage extends AgilysysCommon {
         return this;
     }
 
-    public MainPage clickNext(){
+    public MainPage clickNext() {
         clickByXpath("//*[text()='Next']");
-        return new MainPage(driver,test);
+        return new MainPage(driver, test);
     }
 }

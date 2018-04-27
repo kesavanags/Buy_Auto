@@ -7,10 +7,9 @@ import java.lang.annotation.Target;
 import static java.lang.annotation.ElementType.TYPE;
 
 @Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
-@Target({ TYPE })
+@Target({TYPE})
 @Inherited
-public @interface JiraServer
-{
+public @interface JiraServer {
     /**
      * @return the jira domain, example... http://jira.agilysys.local/
      */
@@ -25,5 +24,6 @@ public @interface JiraServer
      * @return true for ssl, false otherwise, default is false.
      */
     boolean ssl() default false;
+
     boolean disableAutoOpenBrowser() default false;
 }

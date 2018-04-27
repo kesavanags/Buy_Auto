@@ -15,12 +15,12 @@ import java.util.*;
 /**
  * Reported designed to render self-contained HTML top down view of a testing
  * suite.
+ *
  * @author Paul Mendelson
- * @since 5.2
  * @version $Revision: 719 $
+ * @since 5.2
  */
-public class CustomEmailableReporter implements IReporter
-{
+public class CustomEmailableReporter implements IReporter {
     private static final Logger L = Logger.getLogger(CustomEmailableReporter.class);
 
     // ~ Instance fields ------------------------------------------------------
@@ -36,8 +36,7 @@ public class CustomEmailableReporter implements IReporter
 
     private final File emailableReportDir;
 
-    public CustomEmailableReporter()
-    {
+    public CustomEmailableReporter() {
         File file = new File("");
         File targetDir = new File(file.getAbsolutePath() + File.separator + "target");
         emailableReportDir = new File(targetDir.getAbsolutePath() + File.separator + "emailable-report");
@@ -45,18 +44,16 @@ public class CustomEmailableReporter implements IReporter
 
     // ~ Methods --------------------------------------------------------------
 
-    /** Creates summary of the run */
+    /**
+     * Creates summary of the run
+     */
     @Override
-    public void generateReport(List<XmlSuite> xml, List<ISuite> suites, String outdir)
-    {
+    public void generateReport(List<XmlSuite> xml, List<ISuite> suites, String outdir) {
         // Overriding output dir
         outdir = emailableReportDir.getAbsolutePath();
-        try
-        {
+        try {
             m_out = createWriter(outdir);
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             L.error("output file", e);
             return;
         }
@@ -69,8 +66,7 @@ public class CustomEmailableReporter implements IReporter
         m_out.close();
     }
 
-    protected PrintWriter createWriter(String outdir) throws IOException
-    {
+    protected PrintWriter createWriter(String outdir) throws IOException {
         new File(outdir).mkdirs();
         return new PrintWriter(new BufferedWriter(new FileWriter(new File(outdir, "emailable-report.html"))));
     }
@@ -79,20 +75,16 @@ public class CustomEmailableReporter implements IReporter
      * Creates a table showing the highlights of each test method with links to
      * the method details
      */
-    protected void generateMethodSummaryReport(List<ISuite> suites)
-    {
+    protected void generateMethodSummaryReport(List<ISuite> suites) {
         // gterre
         m_methodIndex = 0;
         startResultSummaryTable("passed");
-        for (ISuite suite : suites)
-        {
-            if (suites.size() > 1)
-            {
+        for (ISuite suite : suites) {
+            if (suites.size() > 1) {
                 titleRow(suite.getName(), 6);
             }
             Map<String, ISuiteResult> r = suite.getResults();
-            for (ISuiteResult r2 : r.values())
-            {
+            for (ISuiteResult r2 : r.values()) {
                 ITestContext testContext = r2.getTestContext();
                 String testName = testContext.getName();
                 resultSummary(suite, testContext.getFailedConfigurations(), testName, "failed", " (configuration methods)");
@@ -105,18 +97,16 @@ public class CustomEmailableReporter implements IReporter
         m_out.println("</table>");
     }
 
-    /** Creates a section showing known results for each method */
-    protected void generateMethodDetailReport(List<ISuite> suites)
-    {
+    /**
+     * Creates a section showing known results for each method
+     */
+    protected void generateMethodDetailReport(List<ISuite> suites) {
         m_methodIndex = 0;
-        for (ISuite suite : suites)
-        {
+        for (ISuite suite : suites) {
             Map<String, ISuiteResult> r = suite.getResults();
-            for (ISuiteResult r2 : r.values())
-            {
+            for (ISuiteResult r2 : r.values()) {
                 ITestContext testContext = r2.getTestContext();
-                if (r.values().size() > 0)
-                {
+                if (r.values().size() > 0) {
                     m_out.println("<h1>" + testContext.getName() + "</h1>");
                 }
                 resultDetail(testContext.getFailedConfigurations());
@@ -131,28 +121,22 @@ public class CustomEmailableReporter implements IReporter
     /**
      * @param tests
      */
-    private void resultSummary(ISuite suite, IResultMap tests, String testname, String style, String details)
-    {
-        if (tests.getAllResults().size() > 0)
-        {
+    private void resultSummary(ISuite suite, IResultMap tests, String testname, String style, String details) {
+        if (tests.getAllResults().size() > 0) {
             StringBuffer buff = new StringBuffer();
             String lastClassName = "";
             int mq = 0;
             int cq = 0;
-            for (ITestNGMethod method : getMethodSet(tests, suite))
-            {
+            for (ITestNGMethod method : getMethodSet(tests, suite)) {
                 m_row += 1;
                 m_methodIndex += 1;
                 ITestClass testClass = method.getTestClass();
                 String className = testClass.getName();
-                if (mq == 0)
-                {
+                if (mq == 0) {
                     titleRow(testname + " &#8212; " + style + details, 6);
                 }
-                if (!className.equalsIgnoreCase(lastClassName))
-                {
-                    if (mq > 0)
-                    {
+                if (!className.equalsIgnoreCase(lastClassName)) {
+                    if (mq > 0) {
                         cq += 1;
                         m_out.println("<tr class=\"" + style + (cq % 2 == 0 ? "even" : "odd") + "\">" + "<td rowspan=\"" + mq + "\">" + lastClassName + "</td>" + buff);
                     }
@@ -163,20 +147,16 @@ public class CustomEmailableReporter implements IReporter
                 Set<ITestResult> resultSet = tests.getResults(method);
                 long end = Long.MIN_VALUE;
                 long start = Long.MAX_VALUE;
-                for (ITestResult testResult : tests.getResults(method))
-                {
-                    if (testResult.getEndMillis() > end)
-                    {
+                for (ITestResult testResult : tests.getResults(method)) {
+                    if (testResult.getEndMillis() > end) {
                         end = testResult.getEndMillis();
                     }
-                    if (testResult.getStartMillis() < start)
-                    {
+                    if (testResult.getStartMillis() < start) {
                         start = testResult.getStartMillis();
                     }
                 }
                 mq += 1;
-                if (mq > 1)
-                {
+                if (mq > 1) {
                     buff.append("<tr class=\"").append(style).append(cq % 2 == 0 ? "odd" : "even").append("\">");
                 }
                 String description = method.getDescription();
@@ -189,81 +169,64 @@ public class CustomEmailableReporter implements IReporter
                         .append("<td>").append(start).append("</td>").append("<td class=\"numi\">").append(end - start)
                         .append("</td><td>").append(getJiraHtml(method)).append("</td>").append("</tr>");
             }
-            if (mq > 0)
-            {
+            if (mq > 0) {
                 cq += 1;
                 m_out.println("<tr class=\"" + style + (cq % 2 == 0 ? "even" : "odd") + "\">" + "<td rowspan=\"" + mq + "\">" + lastClassName + "</td>" + buff);
             }
         }
     }
 
-    public String getJiraHtml(ITestNGMethod method)
-    {
-        try
-        {
+    public String getJiraHtml(ITestNGMethod method) {
+        try {
             String jira = method.getConstructorOrMethod().getMethod().getAnnotation(Jira.class).id();
 
-            try
-            {
+            try {
                 JiraServer jiraServer = method.getConstructorOrMethod().getDeclaringClass().getAnnotation(JiraServer.class);
                 String domain = jiraServer.domain();
                 String port = jiraServer.port();
                 boolean ssl = jiraServer.ssl();
 
                 String url = "";
-                if (ssl)
-                {
+                if (ssl) {
                     url = "https://";
-                }
-                else
-                {
+                } else {
                     url = "http://";
                 }
 
-                if (port.isEmpty())
-                {
+                if (port.isEmpty()) {
                     url = url + domain;
-                }
-                else
-                {
+                } else {
                     url = url + domain + ":" + port;
                 }
 
                 url = url + "/browse/" + jira;
 
                 return "<a href=\"" + url + "\" target=\"blank\">" + jira + "</a></tr>";
-            }
-            catch (NullPointerException ignore)
-            {
+            } catch (NullPointerException ignore) {
                 return jira;
             }
-        }
-        catch (NullPointerException ignore)
-        {
+        } catch (NullPointerException ignore) {
             return "";
         }
     }
 
-    /** Starts and defines columns result summary table */
-    private void startResultSummaryTable(String style)
-    {
+    /**
+     * Starts and defines columns result summary table
+     */
+    private void startResultSummaryTable(String style) {
         tableStart(style, "summary");
         m_out.println("<tr><th>Class</th>" + "<th>Method</th><th># of<br/>Scenarios</th><th>Start</th><th>Time<br/>(ms)</th><th>JIRA</th></tr>");
         m_row = 0;
     }
 
-    private String qualifiedName(ITestNGMethod method)
-    {
+    private String qualifiedName(ITestNGMethod method) {
         StringBuilder addon = new StringBuilder();
         String[] groups = method.getGroups();
         int length = groups.length;
-        if (length > 0 && !"basic".equalsIgnoreCase(groups[0]))
-        {
+        if (length > 0 && !"basic".equalsIgnoreCase(groups[0])) {
             addon.append("(");
-            for (int i = 0; i < length; i++)
-            {
-                if (i > 0)
-                {
+            for (int i = 0; i < length; i++) {
+                if (i > 0) {
                     addon.append(", ");
                 }
                 addon.append(groups[i]);
@@ -274,10 +237,8 @@ public class CustomEmailableReporter implements IReporter
         return "<b>" + method.getMethodName() + "</b> " + addon;
     }
 
-    private void resultDetail(IResultMap tests)
-    {
-        for (ITestResult result : tests.getAllResults())
-        {
+    private void resultDetail(IResultMap tests) {
+        for (ITestResult result : tests.getAllResults()) {
             ITestNGMethod method = result.getMethod();
             m_methodIndex++;
             String cname = method.getTestClass().getName();
@@ -289,22 +250,18 @@ public class CustomEmailableReporter implements IReporter
         }
     }
 
-    private void generateForResult(ITestResult ans, ITestNGMethod method, int resultSetSize)
-    {
+    private void generateForResult(ITestResult ans, ITestNGMethod method, int resultSetSize) {
         Object[] parameters = ans.getParameters();
         boolean hasParameters = parameters != null && parameters.length > 0;
-        if (hasParameters)
-        {
+        if (hasParameters) {
             tableStart("result", null);
             m_out.print("<tr class=\"param\">");
-            for (int x = 1; x <= parameters.length; x++)
-            {
+            for (int x = 1; x <= parameters.length; x++) {
                 m_out.print("<th>Parameter #" + x + "</th>");
             }
             m_out.println("</tr>");
             m_out.print("<tr class=\"param stripe\">");
-            for (Object p : parameters)
-            {
+            for (Object p : parameters) {
                 m_out.println("<td>" + toString(p) + "</td>");
             }
             m_out.println("</tr>");
@@ -313,77 +270,58 @@ public class CustomEmailableReporter implements IReporter
         boolean hasReporterOutput = msgs.size() > 0;
         Throwable exception = ans.getThrowable();
         boolean hasThrowable = exception != null;
-        if (hasReporterOutput || hasThrowable)
-        {
+        if (hasReporterOutput || hasThrowable) {
             String indent = " style=\"padding-left:3em\"";
-            if (hasParameters)
-            {
+            if (hasParameters) {
                 m_out.println("<tr><td" + indent + " colspan=\"" + parameters.length + "\">");
-            }
-            else
-            {
+            } else {
                 m_out.println("<div" + indent + ">");
             }
-            if (hasReporterOutput)
-            {
-                if (hasThrowable)
-                {
+            if (hasReporterOutput) {
+                if (hasThrowable) {
                     m_out.println("<h3>Test Messages</h3>");
                 }
-                for (String line : msgs)
-                {
+                for (String line : msgs) {
                     m_out.println(line + "<br/>");
                 }
             }
-            if (hasThrowable)
-            {
+            if (hasThrowable) {
                 boolean wantsMinimalOutput = ans.getStatus() == ITestResult.SUCCESS;
-                if (hasReporterOutput)
-                {
+                if (hasReporterOutput) {
                     m_out.println("<h3>" + (wantsMinimalOutput ? "Expected Exception" : "Failure") + "</h3>");
                 }
                 generateExceptionReport(exception, method);
             }
-            if (hasParameters)
-            {
+            if (hasParameters) {
                 m_out.println("</td></tr>");
-            }
-            else
-            {
+            } else {
                 m_out.println("</div>");
             }
         }
-        if (hasParameters)
-        {
+        if (hasParameters) {
             m_out.println("</table>");
         }
     }
 
-    protected void generateExceptionReport(Throwable exception, ITestNGMethod method)
-    {
+    protected void generateExceptionReport(Throwable exception, ITestNGMethod method) {
         generateExceptionReport(exception, method, exception.getLocalizedMessage());
     }
 
-    private void generateExceptionReport(Throwable exception, ITestNGMethod method, String title)
-    {
+    private void generateExceptionReport(Throwable exception, ITestNGMethod method, String title) {
         m_out.println("<p>" + Utils.escapeHtml(title) + "</p>");
         StackTraceElement[] s1 = exception.getStackTrace();
         Throwable t2 = exception.getCause();
-        if (t2 == exception)
-        {
+        if (t2 == exception) {
             t2 = null;
         }
         int maxlines = Math.min(100, StackTraceTools.getTestRoot(s1, method));
-        for (int x = 0; x <= maxlines; x++)
-        {
+        for (int x = 0; x <= maxlines; x++) {
             m_out.println((x > 0 ? "<br/>at " : "") + Utils.escapeHtml(s1[x].toString()));
         }
-        if (maxlines < s1.length)
-        {
+        if (maxlines < s1.length) {
             m_out.println("<br/>" + (s1.length - maxlines) + " lines not shown");
         }
-        if (t2 != null)
-        {
+        if (t2 != null) {
             generateExceptionReport(t2, method, "Caused by " + t2.getLocalizedMessage());
         }
     }
@@ -392,14 +330,11 @@ public class CustomEmailableReporter implements IReporter
      * Since the methods will be sorted chronologically, we want to return the
      * ITestNGMethod from the invoked methods.
      */
-    private Collection<ITestNGMethod> getMethodSet(IResultMap tests, ISuite suite)
-    {
+    private Collection<ITestNGMethod> getMethodSet(IResultMap tests, ISuite suite) {
         List<IInvokedMethod> r = Lists.newArrayList();
         List<IInvokedMethod> invokedMethods = suite.getAllInvokedMethods();
-        for (IInvokedMethod im : invokedMethods)
-        {
-            if (tests.getAllMethods().contains(im.getTestMethod()))
-            {
+        for (IInvokedMethod im : invokedMethods) {
+            if (tests.getAllMethods().contains(im.getTestMethod())) {
                 r.add(im);
             }
         }
@@ -407,25 +342,21 @@ public class CustomEmailableReporter implements IReporter
         List<ITestNGMethod> result = Lists.newArrayList();
 
         // Add all the invoked methods
-        for (IInvokedMethod m : r)
-        {
+        for (IInvokedMethod m : r) {
             result.add(m.getTestMethod());
         }
 
         // Add all the methods that weren't invoked (e.g. skipped) that we
         // haven't added yet
-        for (ITestNGMethod m : tests.getAllMethods())
-        {
-            if (!result.contains(m))
-            {
+        for (ITestNGMethod m : tests.getAllMethods()) {
+            if (!result.contains(m)) {
                 result.add(m);
             }
         }
         return result;
     }
 
-    public void generateSuiteSummaryReport(List<ISuite> suites)
-    {
+    public void generateSuiteSummaryReport(List<ISuite> suites) {
         tableStart("result", null);
         m_out.print("<tr><th>Test</th>");
         tableColumnStart("Methods<br/>Passed");
@@ -444,15 +375,12 @@ public class CustomEmailableReporter implements IReporter
         int qty_fail = 0;
         long time_start = Long.MAX_VALUE;
         long time_end = Long.MIN_VALUE;
-        for (ISuite suite : suites)
-        {
-            if (suites.size() > 1)
-            {
+        for (ISuite suite : suites) {
+            if (suites.size() > 1) {
                 titleRow(suite.getName(), 7);
             }
             Map<String, ISuiteResult> tests = suite.getResults();
-            for (ISuiteResult r : tests.values())
-            {
+            for (ISuiteResult r : tests.values()) {
                 qty_tests += 1;
                 ITestContext overview = r.getTestContext();
                 startSummaryRow(overview.getName());
@@ -476,8 +404,7 @@ public class CustomEmailableReporter implements IReporter
                 m_out.println("</tr>");
             }
         }
-        if (qty_tests > 1)
-        {
+        if (qty_tests > 1) {
             m_out.println("<tr class=\"total\"><td>Total</td>");
             summaryCell(qty_pass_m, Integer.MAX_VALUE);
             summaryCell(qty_pass_s, Integer.MAX_VALUE);
@@ -489,106 +416,76 @@ public class CustomEmailableReporter implements IReporter
         m_out.println("</table>");
     }
 
-    private void summaryCell(String[] val)
-    {
+    private void summaryCell(String[] val) {
         StringBuffer b = new StringBuffer();
-        for (String v : val)
-        {
+        for (String v : val) {
             b.append(v + " ");
         }
         summaryCell(b.toString(), true);
     }
 
-    private void summaryCell(String v, boolean isgood)
-    {
+    private void summaryCell(String v, boolean isgood) {
         m_out.print("<td class=\"numi" + (isgood ? "" : "_attn") + "\">" + v + "</td>");
     }
 
-    private void startSummaryRow(String label)
-    {
+    private void startSummaryRow(String label) {
         m_row += 1;
         m_out.print("<tr" + (m_row % 2 == 0 ? " class=\"stripe\"" : "") + "><td style=\"text-align:left;padding-right:2em\">" + label + "</td>");
     }
 
-    private void summaryCell(int v, int maxexpected)
-    {
+    private void summaryCell(int v, int maxexpected) {
         summaryCell(String.valueOf(v), v <= maxexpected);
         m_rowTotal += v;
     }
 
-    private void tableStart(String cssclass, String id)
-    {
+    private void tableStart(String cssclass, String id) {
         m_out.println("<table cellspacing=\"0\" cellpadding=\"0\"" + (cssclass != null ? " class=\"" + cssclass + "\"" : " style=\"padding-bottom:2em\"") + (id != null ? " id=\"" + id + "\"" : "") + ">");
         m_row = 0;
     }
 
-    private void tableColumnStart(String label)
-    {
+    private void tableColumnStart(String label) {
         m_out.print("<th class=\"numi\">" + label + "</th>");
     }
 
-    private void titleRow(String label, int cq)
-    {
+    private void titleRow(String label, int cq) {
         m_out.println("<tr><th colspan=\"" + cq + "\">" + label + "</th></tr>");
         m_row = 0;
     }
 
-    String toString(Object obj)
-    {
+    String toString(Object obj) {
         String result;
-        if (obj != null)
-        {
-            if (obj instanceof boolean[])
-            {
+        if (obj != null) {
+            if (obj instanceof boolean[]) {
                 result = Arrays.toString((boolean[]) obj);
-            }
-            else if (obj instanceof byte[])
-            {
+            } else if (obj instanceof byte[]) {
                 result = Arrays.toString((byte[]) obj);
-            }
-            else if (obj instanceof char[])
-            {
+            } else if (obj instanceof char[]) {
                 result = Arrays.toString((char[]) obj);
-            }
-            else if (obj instanceof double[])
-            {
+            } else if (obj instanceof double[]) {
                 result = Arrays.toString((double[]) obj);
-            }
-            else if (obj instanceof float[])
-            {
+            } else if (obj instanceof float[]) {
                 result = Arrays.toString((float[]) obj);
-            }
-            else if (obj instanceof int[])
-            {
+            } else if (obj instanceof int[]) {
                 result = Arrays.toString((int[]) obj);
-            }
-            else if (obj instanceof long[])
-            {
+            } else if (obj instanceof long[]) {
                 result = Arrays.toString((long[]) obj);
-            }
-            else if (obj instanceof Object[])
-            {
+            } else if (obj instanceof Object[]) {
                 result = Arrays.deepToString((Object[]) obj);
-            }
-            else if (obj instanceof short[])
-            {
+            } else if (obj instanceof short[]) {
                 result = Arrays.toString((short[]) obj);
-            }
-            else
-            {
+            } else {
                 result = obj.toString();
             }
-        }
-        else
-        {
+        } else {
             result = "null";
         }
         return Utils.escapeHtml(result);
     }
 
-    /** Starts HTML stream */
-    protected void startHtml(PrintWriter out)
-    {
+    /**
+     * Starts HTML stream
+     */
+    protected void startHtml(PrintWriter out) {
         out.println("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\" \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">");
         out.println("<html xmlns=\"http://www.w3.org/1999/xhtml\">");
         out.println("<head>");
@@ -622,23 +519,27 @@ public class CustomEmailableReporter implements IReporter
         out.println("<body>");
     }
 
-    /** Finishes HTML stream */
-    protected void endHtml(PrintWriter out)
-    {
+    /**
+     * Finishes HTML stream
+     */
+    protected void endHtml(PrintWriter out) {
         out.println("</body></html>");
     }
 
     // ~ Inner Classes --------------------------------------------------------
-    /** Arranges methods by classname and method name */
-    private class TestSorter implements Comparator<IInvokedMethod>
-    {
+
+    /**
+     * Arranges methods by classname and method name
+     */
+    private class TestSorter implements Comparator<IInvokedMethod> {
         // ~ Methods
         // -------------------------------------------------------------
 
-        /** Arranges methods by classname and method name */
+        /**
+         * Arranges methods by classname and method name
+         */
         @Override
-        public int compare(IInvokedMethod o1, IInvokedMethod o2)
-        {
+        public int compare(IInvokedMethod o1, IInvokedMethod o2) {
             // System.out.println("Comparing " + o1.getMethodName() + " " +
             // o1.getDate()
             // + " and " + o2.getMethodName() + " " + o2.getDate());
