@@ -1,7 +1,5 @@
 package Common;
 
-//import Common.Report.Report;
-
 import Common.Report.Report;
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.*;
@@ -11,15 +9,11 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.Select;
-
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -29,19 +23,18 @@ public class AgilysysCommon extends Report implements InterfaceCommon {
     }
 
     public RemoteWebDriver driver;
-    protected static Properties prop;
-    public String sUrl, primaryWindowHandle;
+    public String URL, primaryWindowHandle;
 
     public AgilysysCommon() {
-        sUrl = "http://buy-test-buy-01.bellevue.agilysys.com:8080/login";
+        URL = "http://buy-test-buy-01.bellevue.agilysys.com:8080/login";
     }
 
     public void invokeTestApp(String browser) {
-        invokeApp(browser, false);
+        invokeTestApp(browser, false);
     }
 
 
-    public void invokeApp(String browser, boolean bRemote) {
+    public void invokeTestApp(String browser, boolean bRemote) {
         try {
 
             DesiredCapabilities dc = new DesiredCapabilities();
@@ -60,7 +53,7 @@ public class AgilysysCommon extends Report implements InterfaceCommon {
 
             driver.manage().window().maximize();
             driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
-            driver.get(sUrl);
+            driver.get(URL);
 
             primaryWindowHandle = driver.getWindowHandle();
             reportTestStep("The browser:" + browser + " launched successfully",
